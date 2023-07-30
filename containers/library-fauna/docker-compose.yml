@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: library_db
+    image: fauna/faunadb:latest
+    ports:
+      - '8443:8443'
+      - '8084:8084'
+    restart: unless-stopped
+    volumes:
+      - faunadb:/var/lib/faunadb
+      - /home/containers/fauna/logs:/var/log/faunadb
+  
+  portainer_agent:
+    container_name: library_portainer_agent
+    image: portainer/agent:latest
+    ports:
+      - '9001:9001'
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+
+volumes:
+  faunadb:
+    driver: local
+    name: library_db
